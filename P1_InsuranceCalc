@@ -1,0 +1,167 @@
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+int insuranceChoice = 0;
+
+int age = 0;
+int gender = 0;
+int marital = 0;
+int employment = 0;
+int activity = 0;
+int smoking = 0;
+int milesPerMonth = 0;
+int accidents = 0;
+
+double lifeInsurancePrem = 0;
+double mediInsurancePrem = 0;
+double carInsurancePrem = 0;
+
+int restart = 0;
+
+string policy;
+int basePremium = 0;
+int otherCost = 0;
+
+
+int main () {
+    
+    cout << endl << "Welcome to the monthly insurance premium calculator." << endl;
+    cout << "Choose a type of policy and press enter." << endl;
+    cout << "1 - Life";
+    cout << "   " << "2 - Medical";
+    cout << "   " << "3 - Automobile" << endl;
+    cin >> insuranceChoice;
+        
+    switch (insuranceChoice) {
+        case 1:
+            policy = "Life";
+            basePremium = 20.00;
+            
+            cout << endl << "You have elected to calculate the monthly premium of a Life Insurance Policy. We need a bit of info to calculate this." << endl;
+            cout << "Age (18-100): ";
+            cin >> age;
+                while (age < 18 || age > 100) {
+                    cout << "ERROR: Please enter a number between 18-100.";
+                    cout << endl << "Age (18-100): ";
+                    cin >> age;
+                }
+            cout << "Gender (1 = F; 2 = M): ";
+            cin >> gender;
+                while (gender < 1 || gender > 2) {
+                    cout << "ERROR: Please enter either a 1 for female or 2 for male.";
+                    cout << endl << "Gender (1 = F; 2 = M): ";
+                    cin >> gender;
+                }
+            cout << "Marital Status (1 = Single; 2 = Married): ";
+            cin >> marital;
+                while (marital < 1 || marital > 2) {
+                    cout << "ERROR: Please enter either a 1 if Single or 2 if Married.";
+                    cout << endl << "Marital Status (1 = Single; 2 = Married): ";
+                    cin >> marital;
+                }
+            cout << "Employment status (1 = Employed; 2 = Unemployed): ";
+            cin >> employment;
+                while (employment < 1 || employment > 2) {
+                    cout << "ERROR: Please enter either a 1 if Employed or 2 if Unemployed.";
+                    cout << endl << "Employment status (1 = Employed; 2 = Unemployed): ";
+                    cin >> employment;
+                }
+                
+            otherCost = (age / 0.75) + (3 * gender) + (5 * marital) + (5 * employment);
+        break;
+            
+        case 2:
+            policy = "Medical";
+            basePremium = 150.00;
+            
+            cout << endl << "You have elected to calculate the monthly premium of a Medical Insurance Policy. We need a bit of info to calculate this." << endl;
+            cout << "Age (18-100): ";
+            cin >> age;
+                while (age < 18 || age > 100) {
+                    cout << "ERROR: Please enter a number between 18-100.";
+                    cout << endl << "Age (18-100): ";
+                    cin >> age;
+                }
+            cout << "Gender (1 = F; 2 = M): ";
+            cin >> gender;
+                while (gender < 1 || gender > 2) {
+                    cout << "ERROR: Please enter either a 1 for female or 2 for male.";
+                    cout << endl << "Gender (1 = F; 2 = M): ";
+                    cin >> gender;
+                }
+            cout << "Health (1 = Excellent; 2 = Good; 3 = Average; 4 = Poor): ";
+            cin >> activity;
+                while (activity < 1 || activity > 4) {
+                    cout << "ERROR: Please enter a number between 1 and 4.";
+                    cout << endl << "Health (1 = Excellent; 2 = Good; 3 = Average; 4 = Poor): ";
+                    cin >> activity;
+                }
+            cout << "Smoking status (1 = Smoked in the last year; 2 = Haven't smoked in the last year): ";
+            cin >> smoking;
+                while (smoking < 1 || smoking > 2) {
+                    cout << "ERROR: Please enter either a 1 or 2";
+                    cout << endl << "Smoking status (1 = Smoked in the last year; 2 = Haven't smoked in the last year): ";
+                    cin >> smoking;
+                }
+            
+            otherCost = (25.25 * age) + (8 * gender) + (15 * activity) + (15 * smoking);
+        break;
+            
+        case 3:
+            policy = "Automobile";
+            basePremium = 30.00;
+            
+            cout << endl << "You have elected to calculate the monthly premium of a Automobile Insurance Policy. We need a bit of info to calculate this." << endl;
+            cout << "Age (18-100): ";
+            cin >> age;
+                while (age < 18 || age > 100) {
+                    cout << "ERROR: Please enter a number between 18-100.";
+                    cout << endl << "Age (18-100): ";
+                    cin >> age;
+                }
+            cout << "Gender (1 = F; 2 = M): ";
+            cin >> gender;
+                while (gender < 1 || gender > 2) {
+                    cout << "ERROR: Please enter either a 1 for female or 2 for male.";
+                    cout << endl << "Gender (1 = F; 2 = M): ";
+                    cin >> gender;
+                }
+            cout << "Miles driven per month (1000-1000000): ";
+            cin >> milesPerMonth;
+                while (milesPerMonth < 1000 || milesPerMonth > 1000000) {
+                    cout << "ERROR: Please enter a value between 1000-1000000.";
+                    cout << endl << "Miles driven per month (1000-1000000): ";
+                    cin >> milesPerMonth;
+                }
+            cout << "Automobile accidents in the past 5 years (0-40): ";
+            cin >> accidents;
+                while (accidents < 0 || accidents > 40) {
+                    cout << "ERROR: Please enter a value between 0-40.";
+                    cout << endl << "Automobile accidents in the past 5 years (0-40): ";
+                    cin >> accidents;
+                }
+            
+            otherCost = (200/age) + (2.05 * gender) + (milesPerMonth/10000) + (accidents);
+        break;
+    }
+    
+    cout << endl << "Your estimated costs:" << endl;
+    cout << "Insurance Policy" << "                     " << policy << endl;
+    cout << "Base Premium" << "                         " << "$" << setprecision(2) << fixed << basePremium << " per month" << endl;
+    cout << "Costs Due to Personal Factors" << "        " << "$" << setprecision(2) << fixed << otherCost  << " per month" << endl;
+    cout << "TOTAL Estimate of Monthly Cost" << "       " << "$" << setprecision(2) << fixed << basePremium + otherCost << " per month" << endl;
+
+    cout << endl << "Press 1 to restart. Press 2 to quit. ";
+    cin >> restart;
+        
+    switch (restart) {
+        case 1:
+            main();
+        break;
+        
+        case 2:
+            return 0;
+        break; 
+    }
+}
