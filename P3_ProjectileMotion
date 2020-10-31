@@ -1,0 +1,189 @@
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+//strings to hold data from file
+string one = "";
+string two = "";
+string three = "";
+string four = "";
+string five = "";
+string six = "";
+
+// doubles to hold essential data
+double mass = 0;
+double velocity = 0;
+double angle = 0;
+double start_time = 0;
+double finish_time = 0;
+double delta_time = 0;
+
+// vectors for calculations and output
+vector<double> state (4);
+vector<double> x_trajectory (1);
+vector<double> y_trajectory (1);
+
+void getData() { //input data from file into strings, convert strings to appropriate dtaa type
+
+    ifstream inputFile;
+
+    //open data file
+        inputFile.open("input.csv");
+
+    //check if file is open
+        if (!inputFile.is_open()) {
+            cout << "Could not open file" << endl;
+        }
+
+    //inputting data from file into strings
+        inputFile >> one;
+        inputFile >> two;
+        inputFile >> three;
+        inputFile >> four;
+        inputFile >> five;
+        inputFile >> six;
+
+        inputFile.close();
+  
+    //getting variable name from string, the chars before ,
+        string massS = one.substr(0, one.find(","));
+        string velocityS = two.substr(0, two.find(","));
+        string angleS = three.substr(0, three.find(","));
+        string start_timeS = four.substr(0, four.find(","));
+        string finish_timeS = five.substr(0, five.find(","));
+        string delta_timeS = six.substr(0, six.find(","));
+    
+    //getting data value as strings from string, the chars after ,
+        string massN = one.substr(one.find(",")+1, one.length());
+        string velocityN = two.substr(two.find(",")+1, one.length());
+        string angleN = three.substr(three.find(",")+1, one.length());
+        string start_timeN = four.substr(four.find(",")+1, one.length());
+        string finish_timeN = five.substr(five.find(",")+1, one.length());
+        string delta_timeN = six.substr(six.find(",")+1, one.length());
+    
+    //setting inputted strings to type doubles
+        stringstream Mass(massN);
+        Mass >> mass;
+            cout << massS << "=" << mass << endl;
+        
+        stringstream Velocity(velocityN);
+        Velocity >> velocity;
+            cout << velocityS << "=" << velocity << endl;
+       
+        stringstream Angle(angleN);
+        Angle >> angle;
+            cout << angleS << "=" << angle << endl;
+        angle = (angle*M_PI)/180;
+    
+        stringstream Start_time(start_timeN);
+        Start_time >> start_time;
+            cout << start_timeS << "=" << start_time << endl;
+        
+        stringstream Finish_time(finish_timeN);
+        Finish_time >> finish_time;
+            cout << finish_timeS << "=" << finish_time << endl;
+       
+        stringstream Delta_time(delta_timeN);
+        Delta_time >> delta_time;
+            cout << delta_timeS << "=" << delta_time << endl;
+
+}
+
+void simulationLoop () { // run simulation loop
+
+    //setting initial conditions of simulation
+        //x,y
+        state[0] = 0;
+        state[1] = 0;
+        //v_x, v_y
+        state[2] = velocity * cos(angle);
+        state[3] = velocity * sin(angle);
+    
+
+    //create output file
+    ofstream outputFile;
+
+    //inputting data from file into strings
+        outputFile.open("output3.csv");
+
+    //check if file is open
+        if (!outputFile.is_open()) {
+            cout << "Could not open file" << endl;
+        }
+
+    //simulation loop
+    for (double i = start_time; i < finish_time; i += delta_time) {
+
+        //updating values at each increment of time
+        state[0] += delta_time * state[2];
+        state[1] += delta_time * state[3];
+        state[2] += delta_time * 0;
+        state[3] += delta_time * -9.8;
+        
+        //save x,y position into two vectors
+        x_trajectory.push_back (state[0]);
+        y_trajectory.push_back (state[1]);
+        
+        //output xy values to a file names output3.csv
+        outputFile << state[0] << "," << state[1] << endl; 
+
+    }
+
+    outputFile.close();
+}
+
+void bisectionMethod () { // bisection method
+    
+    //initializing start, end and mid
+    int start = 1;
+    int end = y_trajectory.size()-1;
+    int mid = (start+end)/2;
+
+    //setting error threshhold of 1.0
+    double errorT = 1.0;
+    
+    // x and y variables of location check
+    double xx = 0;
+    double yy = 0;
+
+    // check each location for position and collision
+    for (int i = 0; i < y_trajectory.size(); i++) {
+
+        //set x and y to trajectory at updated mid index 
+        xx = x_trajectory[mid];
+        yy = y_trajectory[mid];
+        
+        if (abs(yy) <= errorT) { // projectile hit ground
+           cout << "The projectile hit the ground at location (x,y) = " << xx << "," << yy << endl;
+            break; 
+        } else { // projectile didn't hit ground
+            if (y_trajectory[start] * yy <= 0) {
+                end = mid;
+            } else {
+                start = mid;
+            }
+            mid = (start+end)/2;
+            cout << "Checking for a collision at location (x,y) = " << xx << "," << yy << endl;
+        }
+        mid = (start+end)/2;
+    }
+
+}
+
+int main()
+{
+    
+    getData();
+        
+    simulationLoop();
+
+    bisectionMethod();
+    
+    return 0;
+    
+}
