@@ -1,0 +1,202 @@
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+//function prototypes
+int printTable(string policy, double base, double other); // function prints the table of estimated costs based on user inputs - called by each insurance function // passes in policy name, base premium, and variable other costs
+
+int again(int & yes); // function asks user to either quit or restart program - called by main function // passes by reference the restart variable
+
+int lifeInsurance (int c1, int c2, int c3, int c4); // function that calculates life monthly insurance costs - called by main function when user is prompted // passes in the 4 relevant constraints
+int medicalInsurance (int c1, int c2, int c3, int c4); // function that calculates medical monthly insurance costs - called by main function when user is prompted // passes in the 4 relevant constraints
+int automobileInsurance (int c1, int c2, int c3, int c4); // function that calculates automobile insurance monthly costs - called by main function when user is prompted // passes in the 4 relevant constraints
+
+// main function
+int main () { 
+    
+    //local vars
+    int insuranceChoice = 0; //var that controls which insurance should be calculated, chosen by user when prompted
+    
+    int age = 0;            //
+    int gender = 0;         //
+    int marital = 0;        //  these are all variables for the constraints of each of the insurances 
+    int employment = 0;     //      
+    int activity = 0;       //      user inputs each value when prompted
+    int smoking = 0;        //
+    int milesPerMonth = 0;  //
+    int accidents = 0;      //
+    
+    int restart = 0; // var that controls whether program should restart or quit, chosen by user when prompted
+    
+    //introduction to program
+    cout << endl << "Welcome to the monthly insurance premium calculator." << endl;
+    cout << "Choose a type of policy and press enter." << endl;
+    cout << "1 - Life    2 - Medical   3 - Automobile" << endl; // system prompts user to choose which insurance to calculate
+    cin >> insuranceChoice; //user chooses which insurance to calculate based on input 
+        
+    // switch case to calculate the correct insurance based on user input
+    switch (insuranceChoice) { 
+        case 1: //if user enters 1 - runs lifeInsurance function
+            lifeInsurance(age, gender, marital, employment); //runs function to calculate life insurance based on these constraints
+        break;
+            
+        case 2://if user enters 2 - runs medicalInsurance function
+            medicalInsurance(age, gender, activity, smoking); //runs function to calculate medical insurance based on these constraints
+        break;
+            
+        case 3://if user enters 3 - runs automobileInsurance function
+            automobileInsurance(age, gender, milesPerMonth, accidents); //runs function to calculate automobile insurance based on these constraints
+        break;
+    }
+    
+    again(restart); // function call to prompt user whether they want to restart or not
+    
+    // switch case to either re run the program or quit based on user input from function above 
+	
+    switch (restart) {
+        case 1: // if 1 is pressed at promt, main is run - program restarts
+            main();
+        break;
+        
+        case 2: // if 2 is pressed at prompt, 0 is returned - program ends
+            return 0;
+        break; 
+    }
+}
+
+//function definitions
+
+int printTable(string policy, double base, double other) { // output of monthly insurance price
+
+    cout << endl << "Your estimated costs:" << endl;
+    cout << "Insurance Policy" << "                       " << policy << endl; // outputs name of selected policy
+    cout << "Base Premium" << "                           " << "$" << setprecision(2) << fixed << base << " per month" << endl; // outputs fixed cost of chosen policy
+    cout << "Costs Due to Personal Factors" << "          " << "$" << setprecision(2) << fixed << other  << " per month" << endl; // outputs variable other costs of chosen policy based on user inputs
+    cout << "TOTAL Estimate of Monthly Cost" << "         " << "$" << setprecision(2) << fixed << base + other << " per month" << endl; // outputs total monthly cost based on above values
+}
+
+int again(int & yes) { // passes restart var by reference to prompt user whether they want to quit or restart
+    
+    cout << endl << "Press 1 to restart. Press 2 to quit. ";
+    cin >> yes;  //user chooses to restart or quit
+    
+    return yes; // returns user input of 1 or 2
+}
+
+
+int lifeInsurance (int c1, int c2, int c3, int c4) { // if called - calculates Life Insurance, passing in the relevant constraintsB
+    
+    int otherCost = 0; // declaring a local variable - the total variable other costs of this insurance based on user inputs below
+    
+        cout << endl << "You have elected to calculate the monthly premium of a Life Insurance Policy. We need a bit of info to calculate this." << endl; //message declaring which insurance has been chosen and what is next
+        cout << "Age (18-100): "; // system promts user to input age within the range of 18-100
+        cin >> c1;
+            while (c1 < 18 || c1 > 100) {
+                cout << "ERROR: Please enter a number between 18-100.";  //
+                cout << endl << "Age (18-100): ";                        // while loop that ensures user enters a value within the correct range
+                cin >> c1;                                               //
+            }
+        cout << "Gender (1 = F; 2 = M): "; // system promts user to input gender, either 1 or 2
+        cin >> c2;
+            while (c2 < 1 || c2 > 2) {
+                cout << "ERROR: Please enter either a 1 for female or 2 for male.";     //
+                cout << endl << "Gender (1 = F; 2 = M): ";                              // while loop that ensures user enters a value within the correct range
+                cin >> c2;                                                              //
+            }
+        cout << "Marital Status (1 = Single; 2 = Married): "; // system promts user to input marital status, either 1 or 2
+        cin >> c3;
+            while (c3 < 1 || c3 > 2) {
+                cout << "ERROR: Please enter either a 1 if Single or 2 if Married.";    //
+                cout << endl << "Marital Status (1 = Single; 2 = Married): ";           // while loop that ensures user enters a value within the correct range
+                cin >> c3;                                                              //
+            }
+        cout << "Employment status (1 = Employed; 2 = Unemployed): "; // system promts user to input employment status, either 1 or 2
+        cin >> c4;
+            while (c4 < 1 || c4 > 2) {
+                cout << "ERROR: Please enter either a 1 if Employed or 2 if Unemployed."; //
+                cout << endl << "Employment status (1 = Employed; 2 = Unemployed): ";     // while loop that ensures user enters a value within the correct range
+                cin >> c4;                                                                //
+            }
+        
+        otherCost = (c1 / 0.75) + (3 * c2) + (5 * c3) + (5 * c4); // calculates other costs based on user inputs
+        printTable("Life", 20.00, otherCost); // runs function print table to display outputs - passing in name of polciy, fixed base premium, and recently calculated other costs
+}
+
+int medicalInsurance (int c1, int c2, int c3, int c4) {// if called - calculates Medical Insurance, passing in the relevant constraints
+    
+    int otherCost = 0; // declaring a local variable - the total variable other costs of this insurance based on user inputs below
+    
+        cout << endl << "You have elected to calculate the monthly premium of a Medical Insurance Policy. We need a bit of info to calculate this." << endl; //message declaring which insurance has been chosen and what is next
+        cout << "Age (18-100): "; // system promts user to input age within the range of 18-100
+        cin >> c1;
+            while (c1 < 18 || c1 > 100) {
+                cout << "ERROR: Please enter a number between 18-100.";  //
+                cout << endl << "Age (18-100): ";                        // while loop that ensures user enters a value within the correct range
+                cin >> c1;                                               //
+            }
+        cout << "Gender (1 = F; 2 = M): "; // system promts user to input gender, either 1 or 2
+        cin >> c2;
+            while (c2 < 1 || c2 > 2) {
+                cout << "ERROR: Please enter either a 1 for female or 2 for male."; //
+                cout << endl << "Gender (1 = F; 2 = M): ";                          // while loop that ensures user enters a value within the correct range
+                cin >> c2;                                                          //
+            }
+        cout << "Health (1 = Excellent; 2 = Good; 3 = Average; 4 = Poor): "; // system promts user to input health status, either 1, 2, 3 or 4
+        cin >> c3;
+            while (c3 < 1 || c3 > 4) {
+                cout << "ERROR: Please enter a number between 1 and 4.";                     //
+                cout << endl << "Health (1 = Excellent; 2 = Good; 3 = Average; 4 = Poor): "; // while loop that ensures user enters a value within the correct range
+                cin >> c3;                                                                   //
+            }
+        cout << "Smoking status (1 = Smoked in the last year; 2 = Haven't smoked in the last year): "; // system promts user to input smoking status, either 1 or 2
+        cin >> c4;
+            while (c4 < 1 || c4 > 2) {
+                cout << "ERROR: Please enter either a 1 or 2";                                                          //
+                cout << endl << "Smoking status (1 = Smoked in the last year; 2 = Haven't smoked in the last year): ";  // while loop that ensures user enters a value within the correct range
+                cin >> c4;                                                                                              //
+            }
+        
+        otherCost = (25.25 * c1) + (8 * c2) + (15 * c3) + (15 * c4); // calculates other costs based on user inputs
+        printTable("Medical", 150.00, otherCost); // runs function print table to display outputs - passing in name of polciy, fixed base premium, and recently calculated other costs
+}
+
+int automobileInsurance (int c1, int c2, int c3, int c4) { // if called - calculates Auto Insurance, passing in the relevant constraints
+    
+    int otherCost = 0; // declaring a local variable - the total variable other costs of this insurance based on user inputs below
+    
+        cout << endl << "You have elected to calculate the monthly premium of a Automobile Insurance Policy. We need a bit of info to calculate this." << endl; //message declaring which insurance has been chosen and what is next
+        cout << "Age (18-100): "; // system promts user to input age within the range of 18-100
+        cin >> c1;
+            while (c1 < 18 || c1 > 100) {
+                cout << "ERROR: Please enter a number between 18-100.";  //
+                cout << endl << "Age (18-100): ";                        // while loop that ensures user enters a value within the correct range
+                cin >> c1;                                               //
+            }
+        cout << "Gender (1 = F; 2 = M): "; // system promts user to input gender, either 1 or 2
+        cin >> c2;
+            while (c2 < 1 || c2 > 2) {
+                cout << "ERROR: Please enter either a 1 for female or 2 for male."; //
+                cout << endl << "Gender (1 = F; 2 = M): ";                          // while loop that ensures user enters a value within the correct range
+                cin >> c2;                                                          //
+            }
+        cout << "Miles driven per month (1000-1000000): "; // system promts user to input Miles driven per month within the range of 1000-1000000
+        cin >> c3;
+            while (c3 < 1000 || c3 > 1000000) {
+                cout << "ERROR: Please enter a value between 1000-1000000.";    //
+                cout << endl << "Miles driven per month (1000-1000000): ";      // while loop that ensures user enters a value within the correct range
+                cin >> c3;                                                      //
+            }
+        cout << "Automobile accidents in the past 5 years (0-40): ";  // system promts user to input Automobile accidents within the range of 0-40
+        cin >> c4;
+            while (c4 < 0 || c4 > 40) {
+                cout << "ERROR: Please enter a value between 0-40.";                 //
+                cout << endl << "Automobile accidents in the past 5 years (0-40): "; // while loop that ensures user enters a value within the correct range
+                cin >> c4;                                                           //
+            }
+        
+        otherCost = (200/c1) + (2.05 * c2) + (c3/10000) + (c4); // calculates other costs based on user inputs
+        printTable("Automobile", 30.00, otherCost); // runs function print table to display outputs - passing in name of polciy, fixed base premium, and recently calculated other costs
+}
+
+
+
